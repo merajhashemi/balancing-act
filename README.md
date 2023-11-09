@@ -1,5 +1,12 @@
-# Balancing Act
+# Balancing Act: Constraining Disparate Impact in Sparse Models
 
+
+## About
+Official implementation for the paper [Balancing Act: Constraining Disparate Impact in Sparse Models](https://arxiv.org/abs/2310.20673).
+This code enables fine-tuning sparse neural networks to achieve bounded disparate impact.
+
+We use the [Cooper library](https://github.com/cooper-org/cooper) for implementing and solving non-convex, constrained optimization problems
+(including problems with non-differentiable constraints).
 
 ## Dependencies
 We use Python 3.9.15.

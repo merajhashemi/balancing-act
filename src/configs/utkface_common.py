@@ -13,7 +13,7 @@ def build_common_config():
     config.data.augment = False
     config.data.dataset_kwargs = mlc.ConfigDict({"target_attribute": "gender", "protected_attributes": ("race",)})
 
-    config.model.model_name = "ResNet18"
+    config.model.model_name = "MobileNet_V2"
     config.model.input_shape = (3, 200, 200)
     config.model.is_first_conv_dense = True
     config.model.is_last_fc_dense = True

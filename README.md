@@ -40,8 +40,9 @@ export WANDB_PROJECT=<wandb_project>
 ```
 
 ## Pretrained models
-For CIFAR100 we use the pretrained models from [here](https://github.com/chenyaofo/pytorch-CIFAR-models).
-And for FairFace we use the pretrained models from [here](https://github.com/dchen236/FairFace).
+- CIFAR100: we use the pretrained model from [here](https://github.com/chenyaofo/pytorch-CIFAR-models).
+- FairFace: we use the pretrained model from [here](https://github.com/dchen236/FairFace).
+- UTKFace: we trained the models ourselves, you can find the models [here](https://drive.google.com/drive/folders/1oEM9SpcqvRBsX0gFpdoi_NTa-KzCUr3N?usp=sharing).
 
 Download the pretrained models and place them in the `path_to_checkpoint_dir` directory.
 

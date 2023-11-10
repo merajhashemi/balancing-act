@@ -168,14 +168,14 @@ def construct_models(
             )
         elif config.data.dataset_name == "cifar100":
             model = model_utils.load_cifar100_model(model_placeholder=model, checkpoint_dir=config.train.checkpoint_dir)
-        else:
-            # For imagenet, we keep the model as is. For other datasets, we replace the
-            # fully connected layer with a newly initialized one since the classes being
-            # predicted do not match the original imagenet classes.
-            do_overwrite_fc = config.data.dataset_name != "imagenet"
-            model = model_utils.load_torchvision_model(
-                model_placeholder=model, model_name=config.model.model_name, do_overwrite_fc=do_overwrite_fc
+        elif config.data.dataset_name == "utkface":
+            model = model_utils.load_utkface_model(
+                model_placeholder=model,
+                checkpoint_dir=config.train.checkpoint_dir,
+                target_attribute=config.data.dataset_kwargs["target_attribute"],
             )
+        else:
+            raise ValueError(f"Unknown dataset {config.data.dataset_name}")
 
     if run_checkpoint_dir is not None and run_checkpoint_dir.exists():
         logger.info(f"Loading model.pt from existing checkpoint in directory {run_checkpoint_dir}.")

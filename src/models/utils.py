@@ -1,10 +1,8 @@
-from operator import attrgetter
 from pathlib import Path
 from typing import Iterable
 
 import torch
 import torch.nn as nn
-import torchvision
 
 import src.sparse as _sparse
 
@@ -33,30 +31,14 @@ def patch_mobilenet_state_dict_(state_dict: dict) -> None:
         state_dict[new_k] = state_dict.pop(k)
 
 
-def load_torchvision_model(model_placeholder: nn.Module, model_name: str, do_overwrite_fc: bool) -> nn.Module:
-    """Load a pretrained model from torchvision and overwrite the fully
-    connected layer to allow for fine-tuning to the specific dataset."""
+def load_utkface_model(model_placeholder: nn.Module, checkpoint_dir: str, target_attribute: str) -> nn.Module:
+    """Load the pretrained MobileNetV2 UTKFace model."""
 
-    tv_model_class = getattr(torchvision.models, model_name.lower())
-    pre_weights = attrgetter(f"{model_name}_Weights.IMAGENET1K_V1")(torchvision.models)
-    tv_pretrained_model = tv_model_class(weights=pre_weights)
+    pretrained_state_dict = torch.load(Path(checkpoint_dir) / f"mobilenet_v2_utkface_{target_attribute}.pt")
+    patch_mobilenet_state_dict_(pretrained_state_dict)
+    populate_dummy_extra_states_(model_placeholder, pretrained_state_dict)
 
-    if do_overwrite_fc:
-        # Overwrite the fully connected layer since we will fine-tune this model
-        # to the specific dataset
-        if model_name == "MobileNet_V2":
-            tv_pretrained_model.classifier[1] = model_placeholder.classifier[1]
-        else:  # ResNet
-            tv_pretrained_model.fc = model_placeholder.fc
-
-    tv_pretrained_state_dict = tv_pretrained_model.state_dict()
-    if model_name == "MobileNet_V2":
-        patch_mobilenet_state_dict_(tv_pretrained_state_dict)
-    else:  # ResNet
-        patch_resnet_state_dict_(tv_pretrained_state_dict)
-    populate_dummy_extra_states_(model_placeholder, tv_pretrained_state_dict)
-
-    model_placeholder.load_state_dict(tv_pretrained_state_dict)
+    model_placeholder.load_state_dict(pretrained_state_dict)
 
     return model_placeholder
 
